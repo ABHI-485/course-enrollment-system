@@ -1,0 +1,39 @@
+COURSE ID EDITING — PATCH INSTRUCTIONS
+
+This is the requested change: the actual Course ID field in Courses > Update is editable.
+It is not just an Update-by-ID selector label. The selected course is the old course to modify;
+the numeric Course ID field specifies the new ID to save.
+
+The update includes:
+- Frontend: editable Course ID field and a normal Update tab.
+- FastAPI/Pydantic: allow the CourseUpdate request body to include id.
+- PostgreSQL support: ON UPDATE CASCADE so active and cancelled enrollments keep referring to the same course.
+- ID collision checks and sequence synchronization.
+
+SAFETY FIRST
+1. Back up your PostgreSQL database in pgAdmin before changing IDs.
+2. Stop both FastAPI and Streamlit terminals with Ctrl+C.
+3. Keep your current .env and .venv. They are intentionally not in this patch.
+
+APPLY THE PATCH
+1. Extract this ZIP directly into your existing project folder:
+   C:\Users\Abhijit\OneDrive\Desktop\Course Enrollment System
+2. Allow Windows to replace these files:
+   app\crud.py
+   app\schemas.py
+   frontend\streamlit_app.py
+3. From the project root, run the database migration once:
+   .\.venv\Scripts\python.exe migrate_course_id_update.py
+4. Wait for “Migration complete” or “Migration not needed”. If an error appears, do not change any IDs yet.
+5. Start FastAPI in terminal 1:
+   .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
+6. Start Streamlit in terminal 2:
+   .\.venv\Scripts\python.exe -m streamlit run .\frontend\streamlit_app.py --server.port 8765
+7. Open http://localhost:8765 > Courses > Update.
+8. Select the existing course in the selector, edit the actual “Course ID (editable)” numeric field, and click Save course changes.
+
+RULES
+- The new ID must be a positive integer and cannot already belong to another course.
+- Enrollment references update automatically after the migration.
+- The migration changes only the foreign-key rule, not the course IDs or enrollment data.
+- The migration script reads your existing .env and does not include or replace it.
