@@ -42,17 +42,22 @@ st.markdown(
 
 # ----------------------------- API helpers -----------------------------
 
+
 def api_request(method, endpoint, **kwargs):
-    """Call FastAPI and show a readable connection error when unavailable."""
+    """Call FastAPI and show a readable connection error."""
     try:
         return requests.request(
-            method, f"{API_URL}{endpoint}", timeout=TIMEOUT, **kwargs
+            method,
+            f"{API_URL}{endpoint}",
+            timeout=TIMEOUT,
+            **kwargs,
         )
-       except requests.RequestException as e:
+    except requests.RequestException as e:
         st.error(
             f"API connection error: {type(e).__name__}: {e}"
         )
         return None
+
 
 
 def error_text(response):
