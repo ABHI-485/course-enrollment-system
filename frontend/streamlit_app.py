@@ -48,10 +48,9 @@ def api_request(method, endpoint, **kwargs):
         return requests.request(
             method, f"{API_URL}{endpoint}", timeout=TIMEOUT, **kwargs
         )
-    except requests.RequestException:
+       except requests.RequestException as e:
         st.error(
-            "Cannot connect to FastAPI. Start the backend in another terminal "
-            "with `python -m uvicorn app.main:app`."
+            f"API connection error: {type(e).__name__}: {e}"
         )
         return None
 
