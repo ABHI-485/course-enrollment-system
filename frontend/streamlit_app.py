@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-API_URL =  "http://127.0.0.1:8000"
+API_URL = "https://course-enrollment-system-qn1q.onrender.com"
 TIMEOUT = 10
 
 st.set_page_config(
